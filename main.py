@@ -65,6 +65,7 @@ class Relationship(Star):
         group_id: int | None = None,
         user_id: int | None = None,
     ):
+        """抽查 [群号] [数量]"""
         args = event.message_str.split()
         count = next(
             (int(arg) for arg in args if arg.isdigit() and int(arg) < 1000), 20
@@ -101,6 +102,7 @@ class Relationship(Star):
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("回复")
     async def reply(self, event: AiocqhttpMessageEvent):
+        """(引用群号)回复 [内容]"""
         msg = event.message_str.removeprefix("回复 ").strip()
         if not msg:
             yield event.plain_result("未输入回复内容")
@@ -121,6 +123,7 @@ class Relationship(Star):
 
     @filter.command("监听")
     async def monitor(self, event: AiocqhttpMessageEvent, group_id: int | None = None):
+        """监听 [群号]"""
         from_gid = int(event.get_group_id())
         if not from_gid:
             yield event.plain_result("只能在群聊中使用监听命令")
@@ -141,6 +144,7 @@ class Relationship(Star):
     async def unmonitor(
         self, event: AiocqhttpMessageEvent
     ):
+        """取消监听"""
         from_gid = int(event.get_group_id())
         if not from_gid:
             yield event.plain_result("只能在群聊中使用取消监听命令")
