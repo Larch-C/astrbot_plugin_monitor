@@ -14,7 +14,7 @@ from astrbot.core.platform.sources.aiocqhttp.aiocqhttp_message_event import (
     "astrbot_plugin_monitor",
     "Zhalslar",
     "[仅aiocqhttp] 群消息互通插件",
-    "1.0.0",
+    "1.0.1",
     "https://github.com/Zhalslar/astrbot_plugin_monitor",
 )
 class Relationship(Star):
@@ -159,14 +159,19 @@ class Relationship(Star):
     async def on_message(self, event: AiocqhttpMessageEvent):
         if not event.message_str or any(isinstance(seg, Reply) for seg in event.get_messages()):
             return
-
+        group_id = event.get_group_id()
+        if not group_id:
+            return
         # 找出所有监听 source_gid 的监听者群
-        source_gid = int(event.get_group_id())
-        listeners = [from_gid for from_gid, target_gid in self.monitor_map.items() if target_gid == source_gid]
+        listeners = [
+            from_gid
+            for from_gid, target_gid in self.monitor_map.items()
+            if target_gid == int(group_id)
+        ]
         if not listeners:
             return
         sender_name = event.get_sender_name()
-        forward_msg = f"[来自群{source_gid}的{sender_name}]\n{event.message_str}"
+        forward_msg = f"[来自群{group_id}的{sender_name}]\n{event.message_str}"
 
         for from_gid in listeners:
             try:
