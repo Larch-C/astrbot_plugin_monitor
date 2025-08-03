@@ -3,7 +3,6 @@ import re
 from astrbot import logger
 from astrbot.api.event import filter
 from astrbot.api.star import Context, Star, register
-from astrbot.core.config.astrbot_config import AstrBotConfig
 from astrbot.core.message.components import Reply
 from astrbot.core.platform.sources.aiocqhttp.aiocqhttp_message_event import (
     AiocqhttpMessageEvent,
@@ -14,13 +13,12 @@ from astrbot.core.platform.sources.aiocqhttp.aiocqhttp_message_event import (
     "astrbot_plugin_monitor",
     "Zhalslar",
     "[仅aiocqhttp] 群消息互通插件",
-    "1.0.1",
+    "v1.0.2",
     "https://github.com/Zhalslar/astrbot_plugin_monitor",
 )
 class Relationship(Star):
-    def __init__(self, context: Context, config: AstrBotConfig):
+    def __init__(self, context: Context):
         super().__init__(context)
-        self.config = config
         # 监听群 -> 被监听群
         self.monitor_map: dict[int, int] = {}
 
